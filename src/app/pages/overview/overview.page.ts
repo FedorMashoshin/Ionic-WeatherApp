@@ -10,6 +10,8 @@ import { WeatherService } from 'src/app/services/weather.service';
 })
 export class OverviewPage implements OnInit {
   entries = [];
+  units = this.weatherService.getUnits();
+  windspeed = 'mp/s';
 
   constructor(
     private geolocation: Geolocation, 
@@ -32,5 +34,25 @@ export class OverviewPage implements OnInit {
   getWeather(index) {
     let info = this.entries[index];
     return this.weatherService.getCurrentWeather(info);
+  }
+
+  getWeatherIcon(icon){
+    return this.weatherService.getWeatherIcon(icon);
+  }
+
+  changeUnits(){
+    this.units = this.weatherService.changeUnits();
+    this.getWeather(0).subscribe(res => {
+      this.entries[0].weather = res;
+      console.log('Weather:', res )
+    })
+  }
+
+  getUnitString(){
+    return this.units === 'metric' ? 'Celsius' : 'Farenheit';
+  }
+
+  getWindSpeed(){
+    return this.units === 'metric' ? 'mp/s' : 'km/h';
   }
 }

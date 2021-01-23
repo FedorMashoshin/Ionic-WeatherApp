@@ -5,12 +5,14 @@
 </ion-header>
 
 <ion-content>
+  <button tappable (click)="changeUnits()">{{ getUnitString() }}</button>
   <ion-slides pager="true" #slides>
     <ion-slide *ngFor="let place of entries">
       <div class="" *ngIf="place.weather">
         <h3>{{ place.weather.name }}</h3>
         <p> {{ place.weather.weather[0]?.description | uppercase }} </p>
         <h2>{{ place.weather.main.temp.toFixed() }} °</h2>
+        <img [src]="getWeatherIcon(place.weather.weather[0]?.icon)" alt="">
         <span>H:{{ place.weather.main.temp_max.toFixed() }}° L:{{ place.weather.main.temp_min.toFixed() }}°</span>
 
         <ion-list>
@@ -18,7 +20,7 @@
             <ion-label>
               Wind
             </ion-label>
-            <p>{{ place.weather.wind.speed }} km/h</p>
+            <p>{{ place.weather.wind.speed }} {{ getWindSpeed() }}</p>
           </ion-item>
           <ion-item>
             <ion-label>
