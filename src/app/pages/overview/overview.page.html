@@ -1,9 +1,54 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>overview</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>Weather by Fedor</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-TEST - {{ test }}
+  <ion-slides pager="true" #slides>
+    <ion-slide *ngFor="let place of entries">
+      <div class="" *ngIf="place.weather">
+        <h3>{{ place.weather.name }}</h3>
+        <p> {{ place.weather.weather[0]?.description | uppercase }} </p>
+        <h2>{{ place.weather.main.temp.toFixed() }} °</h2>
+        <span>H:{{ place.weather.main.temp_max.toFixed() }}° L:{{ place.weather.main.temp_min.toFixed() }}°</span>
+
+        <ion-list>
+          <ion-item>
+            <ion-label>
+              Wind
+            </ion-label>
+            <p>{{ place.weather.wind.speed }} km/h</p>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              Sunrise
+            </ion-label>
+            <p>{{ place.weather.sys.sunrise * 1000 | date: 'h:mm a' }}</p>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              Sunset
+            </ion-label>
+            <p>{{ place.weather.sys.sunset * 1000 | date: 'h:mm a' }}</p>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              Humidity
+            </ion-label>
+            <p>{{ place.weather.main.humidity }}%</p>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              Feels Like
+            </ion-label>
+            <p>{{ place.weather.main.feels_like.toFixed() }}°</p>
+          </ion-item>
+         
+          
+        </ion-list>
+      </div>
+    </ion-slide>
+  </ion-slides>
+
 </ion-content>
