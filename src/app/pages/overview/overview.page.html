@@ -1,9 +1,72 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>overview</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>Weather by Fedor</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-TEST - {{ test }}
+  <button tappable (click)="changeUnits()">{{ getUnitString() }}</button>
+  <ion-slides pager="true" #slides>
+    <ion-slide *ngFor="let place of entries">
+      <div class="" *ngIf="place.weather">
+        <h3>{{ place.weather.name }}</h3>
+        <p> {{ place.weather.weather[0]?.description | uppercase }} </p>
+        <h2>{{ place.weather.main.temp.toFixed() }} °</h2>
+        <img [src]="getWeatherIcon(place.weather.weather[0]?.icon)" alt="">
+        <span>H:{{ place.weather.main.temp_max.toFixed() }}° L:{{ place.weather.main.temp_min.toFixed() }}°</span>
+
+        <ion-list>
+          <ion-item>
+            <ion-label>
+              Wind
+            </ion-label>
+            <p>{{ place.weather.wind.speed }} {{ getWindSpeed() }}</p>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              Sunrise
+            </ion-label>
+            <p>{{ place.weather.sys.sunrise * 1000 | date: 'h:mm a' }}</p>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              Sunset
+            </ion-label>
+            <p>{{ place.weather.sys.sunset * 1000 | date: 'h:mm a' }}</p>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              Humidity
+            </ion-label>
+            <p>{{ place.weather.main.humidity }}%</p>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              Feels Like
+            </ion-label>
+            <p>{{ place.weather.main.feels_like.toFixed() }}°</p>
+          </ion-item>  
+        </ion-list>
+      </div>
+      <ion-slides [options]="sliderConfig" *ngIf="place.forecast" class="forecast">
+        <ion-slide *ngFor="let fc of place.forecast?.list">
+          {{ fc.dt*1000 | date: 'MM/dd' }} 
+          {{ fc.dt*1000 | date: 'hh a' }}
+          <img [src]="getWeatherIcon(fc.weather[0]?.icon)" alt="">
+          {{ fc.main.temp.toFixed() }} °
+        </ion-slide>
+      </ion-slides>
+
+      <ion-list>
+        <ion-item *ngFor="let day of place.nextDays">
+          <ion-label>
+            {{ day.date | date: 'EEEE' }}
+          </ion-label>
+          {{ day.max }}
+          {{ day.min }}
+        </ion-item>
+      </ion-list>
+    </ion-slide>
+  </ion-slides>
+
 </ion-content>
