@@ -19,6 +19,14 @@ export class WeatherService {
     }
   } 
 
+  getForecast(info){
+    if(info.type === 'geo') {
+      return this.http.get(`${this.baseURL}forecast?lat=${info.val.latitude}&lon=${info.val.longitude}&appid=${this.apiKey}&units=${this.units}`)
+    } else {
+      return this.http.get(`${this.baseURL}forecast?q=${info.val}&appid=${this.apiKey}&units=${this.units}`)
+    }
+  } 
+
   getUnits(){
     return this.units;
   }
@@ -31,7 +39,7 @@ export class WeatherService {
     // let result;
     // if (icon === '01d') result = `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTX6tdaAV0BPDXGpZeFxno33EMM-eSN6wHkGg&usqp=CAU`
     // return result;
-    return `http://openweathermap.org/img/wn/${icon}.png`
+    return `http://openweathermap.org/img/wn/${icon}@2x.png`
   }
 
 } 

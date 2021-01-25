@@ -45,11 +45,27 @@
               Feels Like
             </ion-label>
             <p>{{ place.weather.main.feels_like.toFixed() }}°</p>
-          </ion-item>
-         
-          
+          </ion-item>  
         </ion-list>
       </div>
+      <ion-slides [options]="sliderConfig" *ngIf="place.forecast" class="forecast">
+        <ion-slide *ngFor="let fc of place.forecast?.list">
+          {{ fc.dt*1000 | date: 'MM/dd' }} 
+          {{ fc.dt*1000 | date: 'hh a' }}
+          <img [src]="getWeatherIcon(fc.weather[0]?.icon)" alt="">
+          {{ fc.main.temp.toFixed() }} °
+        </ion-slide>
+      </ion-slides>
+
+      <ion-list>
+        <ion-item *ngFor="let day of place.nextDays">
+          <ion-label>
+            {{ day.date | date: 'EEEE' }}
+          </ion-label>
+          {{ day.max }}
+          {{ day.min }}
+        </ion-item>
+      </ion-list>
     </ion-slide>
   </ion-slides>
 
