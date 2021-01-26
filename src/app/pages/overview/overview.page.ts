@@ -13,6 +13,9 @@ export class OverviewPage implements OnInit {
   units = this.weatherService.getUnits();
   windspeed = 'mp/s';
 
+  background = null;
+  bp = null;
+
   sliderConfig = {
     freeMode: true,
     SpaceBetween: 5,
@@ -32,7 +35,30 @@ export class OverviewPage implements OnInit {
 
         this.getWeather(0).subscribe(res => {
           this.entries[0].weather = res;
-          console.log('Weather:', res )
+          console.log('Weather:', res );
+          if (res.weather[0].icon === '01n' || res.weather[0].icon === '02n' || res.weather[0].icon === '03n' || res.weather[0].icon === '04n'){
+            this.background = 'url(/assets/clearNight.jpeg)';
+            this.bp = 'cover';
+          }
+          if (
+            res.weather[0].icon === '09n' || res.weather[0].icon === '10n' || res.weather[0].icon === '11n' ||
+            res.weather[0].icon === '09d' || res.weather[0].icon === '10d' || res.weather[0].icon === '11d'
+            ){
+            this.background = 'url(/assets/Rain.gif)';
+            this.bp = 'cover';
+          }
+          if (res.weather[0].icon === '13n' || res.weather[0].icon === '50n' || res.weather[0].icon === '13d' || res.weather[0].icon === '50d'){
+            this.background = 'url(/assets/Snow.jpg)';
+            this.bp = 'cover';
+          }
+          if (res.weather[0].icon === '01d'){
+            this.background = 'url(/assets/ClearSky.jpg)';
+            this.bp = 'cover';
+          }
+          if (res.weather[0].icon === '02d' || res.weather[0].icon === '03d' || res.weather[0].icon === '04d' || res.weather[0].icon === '50d'){
+            this.background = 'url(/assets/cloudy.jpg)';
+            this.bp = 'cover';
+          }
         });
 
         this.getForecast(0).subscribe(res => {
@@ -67,6 +93,7 @@ export class OverviewPage implements OnInit {
 
     this.getForecast(0).subscribe(res => {
       this.entries[0].forecast = res;
+      this.calculateNextDays(0);
     })
     
   }

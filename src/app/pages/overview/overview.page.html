@@ -5,61 +5,65 @@
 </ion-header>
 
 <ion-content>
-  <button tappable (click)="changeUnits()">{{ getUnitString() }}</button>
-  <ion-slides pager="true" #slides>
+  <button class="change" tappable (click)="changeUnits()">{{ getUnitString() }}</button>
+  <ion-slides class="slides" pager="true" #slides 
+  [ngStyle]="
+  { 'background': background, 
+    'background-size':bp
+  }">
     <ion-slide *ngFor="let place of entries">
-      <div class="" *ngIf="place.weather">
-        <h3>{{ place.weather.name }}</h3>
-        <p> {{ place.weather.weather[0]?.description | uppercase }} </p>
-        <h2>{{ place.weather.main.temp.toFixed() }} °</h2>
-        <img [src]="getWeatherIcon(place.weather.weather[0]?.icon)" alt="">
-        <span>H:{{ place.weather.main.temp_max.toFixed() }}° L:{{ place.weather.main.temp_min.toFixed() }}°</span>
+      <div *ngIf="place.weather">
+        <h3 class="city">{{ place.weather.name }}</h3>
+        <p class="description"> {{ place.weather.weather[0]?.description | uppercase }} </p>
+        <h2 class="temp">{{ place.weather.main.temp.toFixed() }}°</h2>
+        <span class="maxlow">H:{{ place.weather.main.temp_max.toFixed() }}° L:{{ place.weather.main.temp_min.toFixed() }}°</span>
 
-        <ion-list>
+        <ion-slides [options]="sliderConfig" *ngIf="place.forecast" class="forecast">
+          <ion-slide *ngFor="let fc of place.forecast?.list">
+            {{ fc.dt*1000 | date: 'MM/dd' }} 
+            {{ fc.dt*1000 | date: 'hh a' }}
+            <img [src]="getWeatherIcon(fc.weather[0]?.icon)" alt="">
+            {{ fc.main.temp.toFixed() }} °
+          </ion-slide>
+        </ion-slides>
+
+        <ion-list class="info" >
           <ion-item>
-            <ion-label>
+            <ion-label class="test">
               Wind
             </ion-label>
             <p>{{ place.weather.wind.speed }} {{ getWindSpeed() }}</p>
           </ion-item>
           <ion-item>
-            <ion-label>
+            <ion-label class="test">
               Sunrise
             </ion-label>
             <p>{{ place.weather.sys.sunrise * 1000 | date: 'h:mm a' }}</p>
           </ion-item>
           <ion-item>
-            <ion-label>
+            <ion-label class="test">
               Sunset
             </ion-label>
             <p>{{ place.weather.sys.sunset * 1000 | date: 'h:mm a' }}</p>
           </ion-item>
           <ion-item>
-            <ion-label>
+            <ion-label class="test">
               Humidity
             </ion-label>
             <p>{{ place.weather.main.humidity }}%</p>
           </ion-item>
           <ion-item>
-            <ion-label>
+            <ion-label class="test">
               Feels Like
             </ion-label>
             <p>{{ place.weather.main.feels_like.toFixed() }}°</p>
           </ion-item>  
         </ion-list>
       </div>
-      <ion-slides [options]="sliderConfig" *ngIf="place.forecast" class="forecast">
-        <ion-slide *ngFor="let fc of place.forecast?.list">
-          {{ fc.dt*1000 | date: 'MM/dd' }} 
-          {{ fc.dt*1000 | date: 'hh a' }}
-          <img [src]="getWeatherIcon(fc.weather[0]?.icon)" alt="">
-          {{ fc.main.temp.toFixed() }} °
-        </ion-slide>
-      </ion-slides>
 
-      <ion-list>
+      <ion-list class="info">
         <ion-item *ngFor="let day of place.nextDays">
-          <ion-label>
+          <ion-label class="test">
             {{ day.date | date: 'EEEE' }}
           </ion-label>
           {{ day.max }}

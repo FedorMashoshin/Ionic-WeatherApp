@@ -1,6 +1,47 @@
+ion-content{
+  font-family: 'EB Garamond', serif;
+}
+
+ion-toolbar {
+  --background: transparent;
+  --ion-color-base: transparent !important;
+  }
+
 .forecast{
+  margin-top: 5rem;
   height: 20vh;
 }
 .swiper-slide{
   display: initial;
+}
+.info{
+  --ion-item-background: transparent;
+}
+.test{
+  color:#fff;
+}
+
+.city{
+  font-size: 2.3rem;
+  color: #fff;
+}
+.maxlow{
+  font-size: 1.1rem;
+  color: #fff;
+}
+.description{
+  font-size: 0.9rem;
+  margin: 0;
+  color: #fff;
+}
+.temp{
+  margin: 0;
+  font-size: 10rem;
+  color:#fff;
+}
+.change{
+  position: absolute;
+  z-index: 1000;
+  top: 0;
+  right: 0;
 }
