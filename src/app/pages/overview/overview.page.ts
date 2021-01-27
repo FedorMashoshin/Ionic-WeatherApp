@@ -9,9 +9,12 @@ import { WeatherService } from 'src/app/services/weather.service';
   styleUrls: ['./overview.page.scss'],
 })
 export class OverviewPage implements OnInit {
-  entries = [];
+  entries: any = [];
   units = this.weatherService.getUnits();
   windspeed = 'mp/s';
+
+  date = new Date();
+  dateHours = this.date.getHours();
 
   background = null;
   bp = null;
@@ -36,27 +39,11 @@ export class OverviewPage implements OnInit {
         this.getWeather(0).subscribe(res => {
           this.entries[0].weather = res;
           console.log('Weather:', res );
-          if (res.weather[0].icon === '01n' || res.weather[0].icon === '02n' || res.weather[0].icon === '03n' || res.weather[0].icon === '04n'){
-            this.background = 'url(/assets/clearNight.jpeg)';
+          if (this.dateHours < 12 && this.dateHours > 20){
+            this.background = 'url(/assets/NIGHT.jpg)';
             this.bp = 'cover';
-          }
-          if (
-            res.weather[0].icon === '09n' || res.weather[0].icon === '10n' || res.weather[0].icon === '11n' ||
-            res.weather[0].icon === '09d' || res.weather[0].icon === '10d' || res.weather[0].icon === '11d'
-            ){
-            this.background = 'url(/assets/Rain.gif)';
-            this.bp = 'cover';
-          }
-          if (res.weather[0].icon === '13n' || res.weather[0].icon === '50n' || res.weather[0].icon === '13d' || res.weather[0].icon === '50d'){
-            this.background = 'url(/assets/Snow.gif)';
-            this.bp = 'cover';
-          }
-          if (res.weather[0].icon === '01d'){
-            this.background = 'url(/assets/ClearSky.jpg)';
-            this.bp = 'cover';
-          }
-          if (res.weather[0].icon === '02d' || res.weather[0].icon === '03d' || res.weather[0].icon === '04d' || res.weather[0].icon === '50d'){
-            this.background = 'url(/assets/cloudy.jpg)';
+          } else {
+            this.background = 'url(/assets/DAY.jpg)';
             this.bp = 'cover';
           }
         });
@@ -99,7 +86,7 @@ export class OverviewPage implements OnInit {
   }
 
   getUnitString(){
-    return this.units === 'metric' ? 'Celsius' : 'Farenheit';
+    return this.units === 'metric' ? '°C' : '°F';
   }
 
   getWindSpeed(){

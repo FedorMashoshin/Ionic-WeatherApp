@@ -1,16 +1,17 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar>
     <ion-title>Weather by Fedor</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content forceOverscroll="false">
   <button class="change" tappable (click)="changeUnits()">{{ getUnitString() }}</button>
   <ion-slides class="slides" pager="true" #slides 
   [ngStyle]="
   { 'background': background, 
     'background-size':bp
-  }">
+  }"
+  >
     <ion-slide *ngFor="let place of entries">
       <div *ngIf="place.weather">
         <h3 class="city">{{ place.weather.name }}</h3>
@@ -59,9 +60,9 @@
         </ion-slides>
       </div>
 
-      <ion-list class="next-days" lines="full">
+      <ion-list class="next-days" lines="none">
         <ion-item *ngFor="let day of place.nextDays" class="next-days-info">
-          <ion-label class="test">
+          <ion-label>
             <span>{{ day.date | date: 'EEEE' }}</span>
           </ion-label>
           <span class="next-days-max">{{ day.max }}</span>

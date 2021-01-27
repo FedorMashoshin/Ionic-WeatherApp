@@ -3,8 +3,9 @@ ion-content{
 }
 
 ion-toolbar {
-  --background: transparent;
-  --ion-color-base: transparent !important;
+  border:none;
+  color: #000;
+  --background: linear-gradient(to right, #c9d6ff, #e2e2e2);  /* Chrome 10-25, Safari 5.1-6 */
   }
 
 .forecast{
@@ -34,17 +35,21 @@ ion-toolbar {
 }
 .next-days{
   --ion-item-background: transparent;
-  width: 95%;
-  margin: 1rem auto;
-  border-radius: 20px;
+ margin-top: 2rem;
 }
 .next-days-info{
+  border-bottom: 1px solid rgb(255, 255, 255);
+  padding: 0.5rem 0;
   font-family: 'EB Garamond', serif;
   background-color: rgba(0, 0, 0, 0.377);
-  color: #fff
+  font-size: 1.2rem;
+  color: #fff;
+  &:last-child{
+    border-bottom: none;
+  }
 }
 .next-days-max, .next-days-min{
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   text-align: center;
   width: 10%;
@@ -90,12 +95,20 @@ ion-toolbar {
 }
 .temp{
   margin: 0;
-  font-size: 10rem;
+  font-size: 12rem;
   color:#fff;
 }
 .change{
+  color:#fff;
+  border-radius: 50%;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid #fff;
+  outline: none;
+  background:rgba(255, 255, 255, 0.1);
   position: absolute;
   z-index: 1000;
-  top: 0;
-  right: 0;
+  padding: .3rem;
+  top: .5rem;
+  left: .5rem;
 }
