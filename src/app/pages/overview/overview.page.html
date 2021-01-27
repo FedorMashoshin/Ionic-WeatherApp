@@ -15,59 +15,57 @@
       <div *ngIf="place.weather">
         <h3 class="city">{{ place.weather.name }}</h3>
         <p class="description"> {{ place.weather.weather[0]?.description | uppercase }} </p>
+
+        <div class="today" >
+          <span class="today-info">
+            <i class="fas fa-wind"></i>
+            <p>{{ place.weather.wind.speed }} {{ getWindSpeed() }}</p>
+        </span>
+
+        <span class="today-info">
+          <div class="today-info-sun">
+            <i class="fas fa-sun"></i>
+          </div>
+          <div class="today-info-time">
+            <div class="sunset">
+              <i class="fas fa-arrow-up"></i>
+              <span>{{ place.weather.sys.sunrise * 1000 | date: 'h:mm a' }}</span>
+            </div>
+            <div class="sunrise">
+              <i class="fas fa-arrow-down"></i>
+              <span>{{ place.weather.sys.sunset * 1000 | date: 'h:mm a' }}</span>
+            </div>
+          </div>
+          
+          </span>
+          
+          <span class="today-info">
+            <i class="fas fa-tint"></i>
+            <p>{{ place.weather.main.humidity }}%</p>
+          </span>
+        </div>
+
         <h2 class="temp">{{ place.weather.main.temp.toFixed() }}°</h2>
         <span class="maxlow">H:{{ place.weather.main.temp_max.toFixed() }}° L:{{ place.weather.main.temp_min.toFixed() }}°</span>
 
         <ion-slides [options]="sliderConfig" *ngIf="place.forecast" class="forecast">
-          <ion-slide *ngFor="let fc of place.forecast?.list">
-            {{ fc.dt*1000 | date: 'MM/dd' }} 
-            {{ fc.dt*1000 | date: 'hh a' }}
+          <ion-slide *ngFor="let fc of place.forecast?.list" class="forecast-list">
+            <span class="forecast-list-weekday">{{ fc.dt*1000 | date: 'EEEE' }}</span> <br>
+            <span class="forecast-list-date">{{ fc.dt*1000 | date: 'MMMM d' }} </span> <br>
+            <span class="forecast-list-time">{{ fc.dt*1000 | date: 'hh:mm a' }}</span>
             <img [src]="getWeatherIcon(fc.weather[0]?.icon)" alt="">
-            {{ fc.main.temp.toFixed() }} °
+            <span class="forecast-list-temp">{{ fc.main.temp.toFixed() }}°</span>
           </ion-slide>
         </ion-slides>
-
-        <ion-list class="info" >
-          <ion-item>
-            <ion-label class="test">
-              Wind
-            </ion-label>
-            <p>{{ place.weather.wind.speed }} {{ getWindSpeed() }}</p>
-          </ion-item>
-          <ion-item>
-            <ion-label class="test">
-              Sunrise
-            </ion-label>
-            <p>{{ place.weather.sys.sunrise * 1000 | date: 'h:mm a' }}</p>
-          </ion-item>
-          <ion-item>
-            <ion-label class="test">
-              Sunset
-            </ion-label>
-            <p>{{ place.weather.sys.sunset * 1000 | date: 'h:mm a' }}</p>
-          </ion-item>
-          <ion-item>
-            <ion-label class="test">
-              Humidity
-            </ion-label>
-            <p>{{ place.weather.main.humidity }}%</p>
-          </ion-item>
-          <ion-item>
-            <ion-label class="test">
-              Feels Like
-            </ion-label>
-            <p>{{ place.weather.main.feels_like.toFixed() }}°</p>
-          </ion-item>  
-        </ion-list>
       </div>
 
-      <ion-list class="info">
-        <ion-item *ngFor="let day of place.nextDays">
+      <ion-list class="next-days" lines="full">
+        <ion-item *ngFor="let day of place.nextDays" class="next-days-info">
           <ion-label class="test">
-            {{ day.date | date: 'EEEE' }}
+            <span>{{ day.date | date: 'EEEE' }}</span>
           </ion-label>
-          {{ day.max }}
-          {{ day.min }}
+          <span class="next-days-max">{{ day.max }}</span>
+          <span class="next-days-min">{{ day.min }}</span>
         </ion-item>
       </ion-list>
     </ion-slide>

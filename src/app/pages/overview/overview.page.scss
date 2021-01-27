@@ -8,17 +8,71 @@ ion-toolbar {
   }
 
 .forecast{
-  margin-top: 5rem;
-  height: 20vh;
+  margin: 5rem 0 3rem 0;
+  height: 30vh;
+  &-list{
+    border-radius: 20px;
+    color: #fff;
+    padding: 1rem 0.3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 .3rem;
+    background-color: rgba(0, 0, 0, 0.322);
+    &-weekday{
+      font-size: .9rem;
+    }
+    &-temp{
+      font-size: 1.6rem;
+      font-weight: bold;
+    }
+  }
 }
 .swiper-slide{
   display: initial;
 }
-.info{
+.next-days{
   --ion-item-background: transparent;
+  width: 95%;
+  margin: 1rem auto;
+  border-radius: 20px;
 }
-.test{
-  color:#fff;
+.next-days-info{
+  font-family: 'EB Garamond', serif;
+  background-color: rgba(0, 0, 0, 0.377);
+  color: #fff
+}
+.next-days-max, .next-days-min{
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  width: 10%;
+}
+.today{
+  margin-top: 1rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  & i{
+    margin-right: 0.4rem;
+  }
+  &-info{
+    display: flex;
+    align-items: center;
+  }
+}
+.fas{
+  font-size: 1.5rem;
+}
+.fa-arrow-up, .fa-arrow-down{
+  font-size: .6rem;
+}
+
+.sunrise, .sunset{
+  display: flex;
+  align-items: center;
 }
 
 .city{
@@ -26,7 +80,7 @@ ion-toolbar {
   color: #fff;
 }
 .maxlow{
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   color: #fff;
 }
 .description{

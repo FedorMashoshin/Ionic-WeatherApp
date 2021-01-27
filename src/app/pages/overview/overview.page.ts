@@ -48,7 +48,7 @@ export class OverviewPage implements OnInit {
             this.bp = 'cover';
           }
           if (res.weather[0].icon === '13n' || res.weather[0].icon === '50n' || res.weather[0].icon === '13d' || res.weather[0].icon === '50d'){
-            this.background = 'url(/assets/Snow.jpg)';
+            this.background = 'url(/assets/Snow.gif)';
             this.bp = 'cover';
           }
           if (res.weather[0].icon === '01d'){
