@@ -1,11 +1,12 @@
 <ion-header>
   <ion-toolbar>
+
+    <ion-button color="light" class="change" tappable (click)="changeUnits()">{{ getUnitString() }}</ion-button>
     <ion-title>Weather by Fedor</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content forceOverscroll="false">
-  <button class="change" tappable (click)="changeUnits()">{{ getUnitString() }}</button>
   <ion-slides class="slides" pager="true" #slides 
   [ngStyle]="
   { 'background': background, 

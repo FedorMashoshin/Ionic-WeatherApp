@@ -3,6 +3,7 @@ ion-content{
 }
 
 ion-toolbar {
+  display: flex;
   border:none;
   color: #000;
   --background: linear-gradient(to right, #c9d6ff, #e2e2e2);  /* Chrome 10-25, Safari 5.1-6 */
@@ -99,16 +100,10 @@ ion-toolbar {
   color:#fff;
 }
 .change{
-  color:#fff;
-  border-radius: 50%;
-  width: 2rem;
-  height: 2rem;
-  border: 1px solid #fff;
+  --border-radius: 50%;
+  --background: transparent;
+  --width: 10px;
+  --height: 10px;
+  --color: transparent;
   outline: none;
-  background:rgba(255, 255, 255, 0.1);
-  position: absolute;
-  z-index: 1000;
-  padding: .3rem;
-  top: .5rem;
-  left: .5rem;
 }
