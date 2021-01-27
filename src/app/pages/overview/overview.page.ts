@@ -9,9 +9,15 @@ import { WeatherService } from 'src/app/services/weather.service';
   styleUrls: ['./overview.page.scss'],
 })
 export class OverviewPage implements OnInit {
-  entries = [];
+  entries: any = [];
   units = this.weatherService.getUnits();
   windspeed = 'mp/s';
+
+  date = new Date();
+  dateHours = this.date.getHours();
+
+  background = null;
+  bp = null;
 
   sliderConfig = {
     freeMode: true,
@@ -32,7 +38,14 @@ export class OverviewPage implements OnInit {
 
         this.getWeather(0).subscribe(res => {
           this.entries[0].weather = res;
-          console.log('Weather:', res )
+          console.log('Weather:', res );
+          if (this.dateHours < 12 && this.dateHours > 20){
+            this.background = 'url(/assets/NIGHT.jpg)';
+            this.bp = 'cover';
+          } else {
+            this.background = 'url(/assets/DAY.jpg)';
+            this.bp = 'cover';
+          }
         });
 
         this.getForecast(0).subscribe(res => {
@@ -67,12 +80,13 @@ export class OverviewPage implements OnInit {
 
     this.getForecast(0).subscribe(res => {
       this.entries[0].forecast = res;
+      this.calculateNextDays(0);
     })
     
   }
 
   getUnitString(){
-    return this.units === 'metric' ? 'Celsius' : 'Farenheit';
+    return this.units === 'metric' ? '°C' : '°F';
   }
 
   getWindSpeed(){
