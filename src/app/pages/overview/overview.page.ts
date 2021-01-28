@@ -2,6 +2,7 @@ import { AlertController, Platform, IonSlides  } from '@ionic/angular';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { WeatherService } from 'src/app/services/weather.service';
+import { Storage } from '@ionic/storage';
 
 const CITIES_KEY = 'cities';
 @Component({
@@ -31,7 +32,8 @@ export class OverviewPage implements OnInit {
     private geolocation: Geolocation, 
     private platform: Platform,
     private weatherService: WeatherService,
-    private alertCtrl: AlertController) {}
+    private alertCtrl: AlertController,
+    private storage: Storage) {}
 
   ngOnInit() {
     this.platform.ready().then(() => {
@@ -167,6 +169,7 @@ export class OverviewPage implements OnInit {
           handler: (data) => {
             let city = {type: 'city', val: data.name, nextDays: [], id: new Date().getTime(), clas: 'cold' };
             this.entries.push(city);
+            this.storeCity(city);
             setTimeout(() => {
               this.slides.slideTo(this.entries.length, 200);
             }, 300)
@@ -189,15 +192,65 @@ export class OverviewPage implements OnInit {
     })
   }
 
-  storeCity(){
-
+  storeCity(city){
+    this.storage.get(CITIES_KEY).then(res => {
+      if(!res){
+        this.storage.set(CITIES_KEY, [city]);
+      } else {
+        res.push(city);
+        this.storage.set(CITIES_KEY, res);
+      }
+    })
   }
 
   loadCities(){
-
+    this.storage.get(CITIES_KEY).then(res => {
+      if(res){
+        this.entries.push(...res);
+        for(let i = 1; i < this.entries.length; i++){
+          this.getWeather(i).subscribe(res => {
+            this.entries[i].weather = res;
+          })
+      
+          this.getForecast(i).subscribe(res => {
+            this.entries[i].forecast = res;
+            this.calculateNextDays(i);
+          });
+        }
+      }
+    })
   }
 
-  removeCity(index){
-    console.log("Deleting city#", index)
+  async removeCity(index){
+    console.log("Deleting city#", index);
+    let alert = await this.alertCtrl.create({
+      header: `Are you sure you want to delete ${this.entries[index].forecast.city.name}?`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            let toRemove = this.entries[index].id;
+            let copy = Object.create(this.entries);
+
+            this.entries = [];
+
+            setTimeout(() => {
+              this.entries = copy.filter(entry => entry.id != toRemove);
+              this.slides.slideTo(index-1, 200);
+            }, 10);
+            this.storage.get(CITIES_KEY).then(res => {
+              let toKeep = res.filter(entry => entry.id != toRemove);
+              this.storage.set(CITIES_KEY, toKeep);
+            })
+          }
+        }
+      ]
+    });
+    (await alert).present();
   }
-}
+  }
+

@@ -82,8 +82,9 @@
           <span class="next-days-min">{{ day.min }}</span>
         </ion-item>
       </ion-list>
-      <ion-button (click)="removeCity(i)" *ngIf="i != 0">
-        <ion-icon name="trash">Remove City</ion-icon>
+      <ion-button color="warning" expand="block" fill="outline" class="delete" (click)="removeCity(i)" *ngIf="i != 0">
+        <ion-icon name="trash"></ion-icon>
+        Remove City
       </ion-button>
     </ion-slide>
   </ion-slides>
