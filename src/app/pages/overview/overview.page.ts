@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { WeatherService } from 'src/app/services/weather.service';
 
+const CITIES_KEY = 'cities';
 @Component({
   selector: 'app-overview',
   templateUrl: './overview.page.html',
@@ -37,16 +38,17 @@ export class OverviewPage implements OnInit {
       this.geolocation.getCurrentPosition().then(position => {
         console.log("position:", position);
         this.entries.push({type: 'geo', val: position.coords, class: 'cold'});
+        this.loadCities();
 
         this.getWeather(0).subscribe(res => {
           this.entries[0].weather = res;
           console.log('Weather:', res );
           console.log('HOURS:', this.dateHours)
-          if (this.dateHours > 8 || this.dateHours < 12){
+          if (this.dateHours >= 8 && this.dateHours < 12){
             this.background = 'url(/assets/MORNING.jpg)';
             this.bp = 'cover';
           } 
-          else if (this.dateHours < 8 || this.dateHours > 20){
+          else if (this.dateHours >= 20 || this.dateHours < 8){
             this.background = 'url(/assets/NIGHT.jpg)';
             this.bp = 'cover';
           }
