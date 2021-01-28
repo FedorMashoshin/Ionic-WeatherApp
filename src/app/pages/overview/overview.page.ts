@@ -41,10 +41,16 @@ export class OverviewPage implements OnInit {
         this.getWeather(0).subscribe(res => {
           this.entries[0].weather = res;
           console.log('Weather:', res );
-          if (this.dateHours < 12 && this.dateHours > 20){
+          console.log('HOURS:', this.dateHours)
+          if (this.dateHours > 8 || this.dateHours < 12){
+            this.background = 'url(/assets/MORNING.jpg)';
+            this.bp = 'cover';
+          } 
+          else if (this.dateHours < 8 || this.dateHours > 20){
             this.background = 'url(/assets/NIGHT.jpg)';
             this.bp = 'cover';
-          } else {
+          }
+          else {
             this.background = 'url(/assets/DAY.jpg)';
             this.bp = 'cover';
           }
