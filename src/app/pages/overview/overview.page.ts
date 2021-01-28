@@ -74,15 +74,15 @@ export class OverviewPage implements OnInit {
     return this.weatherService.getWeatherIcon(icon);
   }
 
-  changeUnits(){
-    this.units = this.weatherService.changeUnits();
-    this.getWeather(0).subscribe(res => {
-      this.entries[0].weather = res;
+  changeUnits(index){
+    this.units = this.weatherService.changeUnits(index);
+    this.getWeather(index).subscribe(res => {
+      this.entries[index].weather = res;
     })
 
-    this.getForecast(0).subscribe(res => {
-      this.entries[0].forecast = res;
-      this.calculateNextDays(0);
+    this.getForecast(index).subscribe(res => {
+      this.entries[index].forecast = res;
+      this.calculateNextDays(index);
     })
     
   }
@@ -127,7 +127,7 @@ export class OverviewPage implements OnInit {
     console.log(this.entries[index].nextDays)
   }
   doRefresh(e){
-    this.getWeather(0).subscribe(res => {
+    setTimeout(() => {  this.getWeather(0).subscribe(res => {
       this.entries[0].weather = res;
     })
 
@@ -135,9 +135,8 @@ export class OverviewPage implements OnInit {
       this.entries[0].forecast = res;
       this.calculateNextDays(0);
     });
-    setTimeout(() => {
       e.target.complete();
-    }, 3000)
+    }, 1000)
   }
 
   async addCity(){
@@ -180,5 +179,17 @@ export class OverviewPage implements OnInit {
         this.calculateNextDays(index);
       });
     })
+  }
+
+  storeCity(){
+
+  }
+
+  loadCities(){
+
+  }
+
+  removeCity(index){
+    console.log("Deleting city#", index)
   }
 }

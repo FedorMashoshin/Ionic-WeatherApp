@@ -31,7 +31,7 @@ export class WeatherService {
     return this.units;
   }
 
-  changeUnits(){
+  changeUnits(index){
     return this.units = this.units === 'metric' ? 'imperial' : 'metric';
   }
 

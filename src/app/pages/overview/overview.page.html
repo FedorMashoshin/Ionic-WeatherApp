@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
 
-    <ion-button class="change" tappable (click)="changeUnits()">{{ getUnitString() }}</ion-button>
+    
     <ion-title>Weather by Fedor</ion-title>
     <ion-buttons slot="end">
       <ion-button color="dark" (click)="addCity()">
@@ -24,7 +24,8 @@
     'background-size':bp
   }"
   >
-    <ion-slide *ngFor="let place of entries">
+    <ion-slide *ngFor="let place of entries; let i = index;">
+      <button class="change" tappable (click)="changeUnits(i)">{{ getUnitString() }}</button>
       <div *ngIf="place.weather">
         <h3 class="city">{{ place.weather.name }}</h3>
         <p class="description"> {{ place.weather.weather[0]?.description | uppercase }} </p>
@@ -81,6 +82,9 @@
           <span class="next-days-min">{{ day.min }}</span>
         </ion-item>
       </ion-list>
+      <ion-button (click)="removeCity(i)" *ngIf="i != 0">
+        <ion-icon name="trash">Remove City</ion-icon>
+      </ion-button>
     </ion-slide>
   </ion-slides>
 
