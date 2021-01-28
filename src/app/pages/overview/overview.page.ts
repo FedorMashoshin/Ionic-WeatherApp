@@ -1,5 +1,5 @@
-import { Platform } from '@ionic/angular';
-import { Component, OnInit } from '@angular/core';
+import { AlertController, Platform, IonSlides  } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { WeatherService } from 'src/app/services/weather.service';
 
@@ -9,6 +9,7 @@ import { WeatherService } from 'src/app/services/weather.service';
   styleUrls: ['./overview.page.scss'],
 })
 export class OverviewPage implements OnInit {
+  @ViewChild('slides') slides: IonSlides;
   entries: any = [];
   units = this.weatherService.getUnits();
   windspeed = 'mp/s';
@@ -28,7 +29,8 @@ export class OverviewPage implements OnInit {
   constructor(
     private geolocation: Geolocation, 
     private platform: Platform,
-    private weatherService: WeatherService) {}
+    private weatherService: WeatherService,
+    private alertCtrl: AlertController) {}
 
   ngOnInit() {
     this.platform.ready().then(() => {
@@ -136,5 +138,47 @@ export class OverviewPage implements OnInit {
     setTimeout(() => {
       e.target.complete();
     }, 3000)
+  }
+
+  async addCity(){
+    let alert = await this.alertCtrl.create({
+      header: 'Add City',
+      inputs: [
+        {
+          name: 'name',
+          type: 'text',
+          placeholder: 'Vancouver'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Add City',
+          handler: (data) => {
+            let city = {type: 'city', val: data.name, nextDays: [], id: new Date().getTime(), clas: 'cold' };
+            this.entries.push(city);
+            setTimeout(() => {
+              this.slides.slideTo(this.entries.length, 200);
+            }, 300)
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+  cityChanged(){
+    this.slides.getActiveIndex().then( index => {
+      this.getWeather(index).subscribe(res => {
+        this.entries[index].weather = res;
+      })
+  
+      this.getForecast(index).subscribe(res => {
+        this.entries[index].forecast = res;
+        this.calculateNextDays(index);
+      });
+    })
   }
 }

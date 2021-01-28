@@ -1,8 +1,13 @@
 <ion-header>
   <ion-toolbar>
 
-    <ion-button color="light" class="change" tappable (click)="changeUnits()">{{ getUnitString() }}</ion-button>
+    <ion-button class="change" tappable (click)="changeUnits()">{{ getUnitString() }}</ion-button>
     <ion-title>Weather by Fedor</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="dark" (click)="addCity()">
+        <ion-icon name ='add'></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -13,7 +18,7 @@
     refreShingspinner="circles"
     ></ion-refresher-content>
   </ion-refresher>
-  <ion-slides class="slides" pager="true" #slides 
+  <ion-slides class="slides" pager="true" #slides (ionSlideWillChange)="cityChanged()"
   [ngStyle]="
   { 'background': background, 
     'background-size':bp
