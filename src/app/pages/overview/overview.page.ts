@@ -124,4 +124,17 @@ export class OverviewPage implements OnInit {
     }
     console.log(this.entries[index].nextDays)
   }
+  doRefresh(e){
+    this.getWeather(0).subscribe(res => {
+      this.entries[0].weather = res;
+    })
+
+    this.getForecast(0).subscribe(res => {
+      this.entries[0].forecast = res;
+      this.calculateNextDays(0);
+    });
+    setTimeout(() => {
+      e.target.complete();
+    }, 3000)
+  }
 }
