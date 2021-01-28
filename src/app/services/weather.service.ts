@@ -36,9 +36,6 @@ export class WeatherService {
   }
 
   getWeatherIcon(icon){
-    // let result;
-    // if (icon === '01d') result = `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTX6tdaAV0BPDXGpZeFxno33EMM-eSN6wHkGg&usqp=CAU`
-    // return result;
     return `http://openweathermap.org/img/wn/${icon}@2x.png`
   }
 

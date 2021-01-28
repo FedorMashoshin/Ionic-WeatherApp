@@ -137,7 +137,8 @@ export class OverviewPage implements OnInit {
     console.log(this.entries[index].nextDays)
   }
   doRefresh(e){
-    setTimeout(() => {  this.getWeather(0).subscribe(res => {
+    setTimeout(() => {  
+      this.getWeather(0).subscribe(res => {
       this.entries[0].weather = res;
     })
 
@@ -167,13 +168,16 @@ export class OverviewPage implements OnInit {
         {
           text: 'Add City',
           handler: (data) => {
-            let city = {type: 'city', val: data.name, nextDays: [], id: new Date().getTime(), clas: 'cold' };
-            this.entries.push(city);
-            this.storeCity(city);
+            let city = {type: 'city', val: data.name, nextDays: [], id: new Date().getTime() };
+              if(data.name.length > 0){
+                this.entries.push(city);
+                this.storeCity(city);
             setTimeout(() => {
               this.slides.slideTo(this.entries.length, 200);
-            }, 300)
-          }
+            }, 300);
+              }
+              
+          }, 
         }
       ]
     });
@@ -252,5 +256,24 @@ export class OverviewPage implements OnInit {
     });
     (await alert).present();
   }
+  async removeAllCities(){
+    let alert = await this.alertCtrl.create({
+      header: `Are you sure you want to delete all cities?`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Delete',
+          handler: async () => {
+            await this.storage.clear();
+            await window.location.reload();
+          }
+        }
+      ]
+    });
+    (await alert).present();
   }
+}
 
