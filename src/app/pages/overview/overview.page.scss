@@ -99,11 +99,7 @@ ion-toolbar {
   font-size: 12rem;
   color:#fff;
 }
-.change{
-  --border-radius: 50%;
-  --background: transparent;
-  --width: 10px;
-  --height: 10px;
-  --color: transparent;
-  outline: none;
+
+ion-refresher-content {
+  background: transparent;
 }
