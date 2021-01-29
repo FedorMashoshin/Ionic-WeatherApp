@@ -26,6 +26,9 @@
   >
     <ion-slide *ngFor="let place of entries; let i = index;">
       <button class="change" tappable (click)="changeUnits(i)">{{ getUnitString() }}</button>
+      <div class="error" *ngIf="!place.weather">
+        Sorry, we couldn't find city: {{ place.val }}
+      </div>
       <div *ngIf="place.weather">
         <h3 class="city">{{ place.weather.name }}</h3>
         <p class="description"> {{ place.weather.weather[0]?.description | uppercase }} </p>
@@ -85,11 +88,11 @@
       <div class="delete-box">
         <ion-button color="warning" class="delete"  fill="outline" class="delete" (click)="removeCity(i)" *ngIf="i != 0">
           <ion-icon name="trash"></ion-icon>
-          Remove City
+          Remove {{ place.val }}
         </ion-button>
         <ion-button color="warning" class="delete"  fill="outline" class="delete" (click)="removeAllCities()" *ngIf="entries.length > 1 && i === 0 ">
-          <ion-icon name="trash"></ion-icon>
-          Remove All Cities
+            <ion-icon name="trash"></ion-icon>
+            <span>Remove All Cities</span> 
         </ion-button>
       </div>
     </ion-slide>

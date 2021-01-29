@@ -172,6 +172,7 @@ export class OverviewPage implements OnInit {
               if(data.name.length > 0){
                 this.entries.push(city);
                 this.storeCity(city);
+                console.log('DATA:',this.entries)
             setTimeout(() => {
               this.slides.slideTo(this.entries.length, 200);
             }, 300);
@@ -228,7 +229,7 @@ export class OverviewPage implements OnInit {
   async removeCity(index){
     console.log("Deleting city#", index);
     let alert = await this.alertCtrl.create({
-      header: `Are you sure you want to delete ${this.entries[index].forecast.city.name}?`,
+      header: `Are you sure you want to delete ${this.entries[index].val} ?`,
       buttons: [
         {
           text: 'Cancel',
