@@ -1,14 +1,17 @@
-import { Platform } from '@ionic/angular';
-import { Component, OnInit } from '@angular/core';
+import { AlertController, Platform, IonSlides  } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { WeatherService } from 'src/app/services/weather.service';
+import { Storage } from '@ionic/storage';
 
+const CITIES_KEY = 'cities';
 @Component({
   selector: 'app-overview',
   templateUrl: './overview.page.html',
   styleUrls: ['./overview.page.scss'],
 })
 export class OverviewPage implements OnInit {
+  @ViewChild('slides') slides: IonSlides;
   entries: any = [];
   units = this.weatherService.getUnits();
   windspeed = 'mp/s';
@@ -28,21 +31,30 @@ export class OverviewPage implements OnInit {
   constructor(
     private geolocation: Geolocation, 
     private platform: Platform,
-    private weatherService: WeatherService) {}
+    private weatherService: WeatherService,
+    private alertCtrl: AlertController,
+    private storage: Storage) {}
 
   ngOnInit() {
     this.platform.ready().then(() => {
       this.geolocation.getCurrentPosition().then(position => {
         console.log("position:", position);
         this.entries.push({type: 'geo', val: position.coords, class: 'cold'});
+        this.loadCities();
 
         this.getWeather(0).subscribe(res => {
           this.entries[0].weather = res;
           console.log('Weather:', res );
-          if (this.dateHours < 12 && this.dateHours > 20){
+          console.log('HOURS:', this.dateHours)
+          if (this.dateHours >= 8 && this.dateHours < 12){
+            this.background = 'url(/assets/MORNING.jpg)';
+            this.bp = 'cover';
+          } 
+          else if (this.dateHours >= 20 || this.dateHours < 8){
             this.background = 'url(/assets/NIGHT.jpg)';
             this.bp = 'cover';
-          } else {
+          }
+          else {
             this.background = 'url(/assets/DAY.jpg)';
             this.bp = 'cover';
           }
@@ -72,15 +84,15 @@ export class OverviewPage implements OnInit {
     return this.weatherService.getWeatherIcon(icon);
   }
 
-  changeUnits(){
-    this.units = this.weatherService.changeUnits();
-    this.getWeather(0).subscribe(res => {
-      this.entries[0].weather = res;
+  changeUnits(index){
+    this.units = this.weatherService.changeUnits(index);
+    this.getWeather(index).subscribe(res => {
+      this.entries[index].weather = res;
     })
 
-    this.getForecast(0).subscribe(res => {
-      this.entries[0].forecast = res;
-      this.calculateNextDays(0);
+    this.getForecast(index).subscribe(res => {
+      this.entries[index].forecast = res;
+      this.calculateNextDays(index);
     })
     
   }
@@ -125,7 +137,8 @@ export class OverviewPage implements OnInit {
     console.log(this.entries[index].nextDays)
   }
   doRefresh(e){
-    this.getWeather(0).subscribe(res => {
+    setTimeout(() => {  
+      this.getWeather(0).subscribe(res => {
       this.entries[0].weather = res;
     })
 
@@ -133,8 +146,135 @@ export class OverviewPage implements OnInit {
       this.entries[0].forecast = res;
       this.calculateNextDays(0);
     });
-    setTimeout(() => {
       e.target.complete();
-    }, 3000)
+    }, 1000)
+  }
+
+  async addCity(){
+    let alert = await this.alertCtrl.create({
+      header: 'Add City',
+      inputs: [
+        {
+          name: 'name',
+          type: 'text',
+          placeholder: 'Vancouver'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Add City',
+          handler: (data) => {
+            let city = {type: 'city', val: data.name, nextDays: [], id: new Date().getTime() };
+              if(data.name.length > 0){
+                this.entries.push(city);
+                this.storeCity(city);
+                console.log('DATA:',this.entries)
+            setTimeout(() => {
+              this.slides.slideTo(this.entries.length, 200);
+            }, 300);
+              }
+              
+          }, 
+        }
+      ]
+    });
+    alert.present();
+  }
+  cityChanged(){
+    this.slides.getActiveIndex().then( index => {
+      this.getWeather(index).subscribe(res => {
+        this.entries[index].weather = res;
+      })
+  
+      this.getForecast(index).subscribe(res => {
+        this.entries[index].forecast = res;
+        this.calculateNextDays(index);
+      });
+    })
+  }
+
+  storeCity(city){
+    this.storage.get(CITIES_KEY).then(res => {
+      if(!res){
+        this.storage.set(CITIES_KEY, [city]);
+      } else {
+        res.push(city);
+        this.storage.set(CITIES_KEY, res);
+      }
+    })
+  }
+
+  loadCities(){
+    this.storage.get(CITIES_KEY).then(res => {
+      if(res){
+        this.entries.push(...res);
+        for(let i = 1; i < this.entries.length; i++){
+          this.getWeather(i).subscribe(res => {
+            this.entries[i].weather = res;
+          })
+      
+          this.getForecast(i).subscribe(res => {
+            this.entries[i].forecast = res;
+            this.calculateNextDays(i);
+          });
+        }
+      }
+    })
+  }
+
+  async removeCity(index){
+    console.log("Deleting city#", index);
+    let alert = await this.alertCtrl.create({
+      header: `Are you sure you want to delete ${this.entries[index].val} ?`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            let toRemove = this.entries[index].id;
+            let copy = Object.create(this.entries);
+
+            this.entries = [];
+
+            setTimeout(() => {
+              this.entries = copy.filter(entry => entry.id != toRemove);
+              this.slides.slideTo(index-1, 200);
+            }, 10);
+            this.storage.get(CITIES_KEY).then(res => {
+              let toKeep = res.filter(entry => entry.id != toRemove);
+              this.storage.set(CITIES_KEY, toKeep);
+            })
+          }
+        }
+      ]
+    });
+    (await alert).present();
+  }
+  async removeAllCities(){
+    let alert = await this.alertCtrl.create({
+      header: `Are you sure you want to delete all cities?`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Delete',
+          handler: async () => {
+            await this.storage.clear();
+            await window.location.reload();
+          }
+        }
+      ]
+    });
+    (await alert).present();
   }
 }
+
