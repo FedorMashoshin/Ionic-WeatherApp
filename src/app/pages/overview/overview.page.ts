@@ -19,8 +19,8 @@ export class OverviewPage implements OnInit {
   date = new Date();
   dateHours = this.date.getHours();
 
-  background = null;
-  bp = null;
+  backgroundImage: string = null;
+  backgroundSize: string = null;
 
   sliderConfig = {
     freeMode: true,
@@ -47,16 +47,16 @@ export class OverviewPage implements OnInit {
           console.log('Weather:', res );
           console.log('HOURS:', this.dateHours)
           if (this.dateHours >= 8 && this.dateHours < 12){
-            this.background = 'url(/assets/MORNING.jpg)';
-            this.bp = 'cover';
+            this.backgroundImage = 'url(/assets/MORNING.jpg)';
+            this.backgroundSize = 'cover';
           } 
           else if (this.dateHours >= 20 || this.dateHours < 8){
-            this.background = 'url(/assets/NIGHT.jpg)';
-            this.bp = 'cover';
+            this.backgroundImage = 'url(/assets/NIGHT.jpg)';
+            this.backgroundSize = 'cover';
           }
           else {
-            this.background = 'url(/assets/DAY.jpg)';
-            this.bp = 'cover';
+            this.backgroundImage = 'url(/assets/DAY.jpg)';
+            this.backgroundSize = 'cover';
           }
         });
 
@@ -119,16 +119,16 @@ export class OverviewPage implements OnInit {
       if(item.dt <= time){
         if(!dayMin || item.main.temp_min < dayMin){
           dayMin = item.main.temp_min;
+          
         }
         if(!dayMax || item.main.temp_max > dayMax){
           dayMax = item.main.temp_max;
         }
       } else {
         this.entries[index].nextDays.push({date: time*1000, min: dayMin.toFixed(), max: dayMax.toFixed()});
-
         dayMin = item.main.temp_min;
         dayMax = item.main.temp_max;
-
+        
         d.setDate(d.getDate() + 1);
         d.setHours(23, 59, 59, 59);
         time = d.getTime() / 1000;
@@ -136,6 +136,7 @@ export class OverviewPage implements OnInit {
     }
     console.log(this.entries[index].nextDays)
   }
+  
   doRefresh(e){
     setTimeout(() => {  
       this.getWeather(0).subscribe(res => {
@@ -255,7 +256,7 @@ export class OverviewPage implements OnInit {
         }
       ]
     });
-    (await alert).present();
+    (alert).present();
   }
   async removeAllCities(){
     let alert = await this.alertCtrl.create({
@@ -269,12 +270,12 @@ export class OverviewPage implements OnInit {
           text: 'Delete',
           handler: async () => {
             await this.storage.clear();
-            await window.location.reload();
+            window.location.reload();
           }
         }
       ]
     });
-    (await alert).present();
+    (alert).present();
   }
 }
 

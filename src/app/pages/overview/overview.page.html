@@ -20,8 +20,8 @@
   </ion-refresher>
   <ion-slides class="slides" pager="true" #slides (ionSlideWillChange)="cityChanged()"
   [ngStyle]="
-  { 'background': background, 
-    'background-size':bp
+  { 'background': backgroundImage, 
+    'background-size': backgroundSize
   }"
   >
     <ion-slide *ngFor="let place of entries; let i = index;">
