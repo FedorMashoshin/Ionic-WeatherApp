@@ -9,7 +9,7 @@
 
 ## Beautiful and useful mobile _weather application_, where you can : 
 
-#### All screenshots were made from IOS device #### 
+#### All screenshots were made from IOS (IPhone XR) device #### 
 
 - [x] ⛅ Check ***current weather*** *(depends on your geolocation)*;
 - [x] ⛅ ***Forecast***  for the next 5 days;
